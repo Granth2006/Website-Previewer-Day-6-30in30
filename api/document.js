@@ -28,7 +28,8 @@ export default async function handler(req, res) {
         await browser.close();
         
         // Send base64 to avoid Vercel Serverless binary corruption
-        res.json({ success: true, base64: buffer.toString('base64') });
+        const base64Str = Buffer.from(buffer).toString('base64');
+        res.json({ success: true, base64: base64Str });
     } catch (error) {
         console.error('PDF error:', error);
         res.status(500).json({ success: false, error: 'Failed to generate PDF' });
