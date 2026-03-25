@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSnap - Screenshot & PDF Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dark-mode">
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <header>
+        <div class="logo">
+            <i class="fa-solid fa-camera-retro"></i>
+            <h1>WebSnap</h1>
+        </div>
+        <div class="theme-toggle">
+            <button id="theme-btn" title="Toggle Light/Dark Mode">
+                <i class="fa-solid fa-sun"></i>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <section class="controls">
+            <div class="url-input-group">
+                <input type="text" id="url-input" placeholder="Enter website URL (e.g., example.com)" autocomplete="off">
+                <button id="preview-btn" class="primary-btn">Preview</button>
+            </div>
+            
+            <div class="device-toggles">
+                <button class="device-btn active" data-device="desktop" title="Desktop View (1920x1080)">
+                    <i class="fa-solid fa-desktop"></i>
+                </button>
+                <button class="device-btn" data-device="tablet" title="Tablet View (768x1024)">
+                    <i class="fa-solid fa-tablet-screen-button"></i>
+                </button>
+                <button class="device-btn" data-device="mobile" title="Mobile View (375x812)">
+                    <i class="fa-solid fa-mobile-screen-button"></i>
+                </button>
+            </div>
+            
+            <div class="action-buttons">
+                <button id="capture-btn" class="action-btn">
+                    <i class="fa-solid fa-camera"></i> Capture Screenshot
+                </button>
+                <button id="pdf-btn" class="action-btn">
+                    <i class="fa-solid fa-file-pdf"></i> Download PDF
+                </button>
+            </div>
+        </section>
+
+        <section class="preview-container">
+            <div class="preview-wrapper desktop" id="preview-wrapper">
+                <div class="loading-overlay" id="loading-overlay">
+                    <div class="spinner"></div>
+                    <p>Loading preview...</p>
+                </div>
+                <div class="error-overlay" id="error-overlay">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <p>Could not load the URL. Connection refused or invalid URL.</p>
+                </div>
+                <iframe id="preview-frame" sandbox="allow-same-origin allow-scripts allow-forms" title="Website Preview"></iframe>
+            </div>
+        </section>
+
+        <!-- Loading Modal for Backend generation -->
+        <div class="modal" id="loading-modal">
+            <div class="modal-content">
+                <div class="spinner"></div>
+                <h3 id="modal-text">Generating Screenshot...</h3>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
