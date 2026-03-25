@@ -31,18 +31,14 @@ export default async function handler(req, res) {
 
         const page = await browser.newPage();
         
-        // Use a 20 second timeout for serverless environments
         await page.goto(url, { waitUntil: 'networkidle2', timeout: 20000 });
         
-        // Return screenshot as a Buffer
         const buffer = await page.screenshot({ fullPage: fullPage });
         await browser.close();
 
-        // Convert Buffer to Base64 String URL
-        const base64Str = buffer.toString('base64');
-        const dataUrl = `data:image/png;base64,${base64Str}`;
-        
-        res.json({ success: true, url: dataUrl });
+        res.setHeader('Content-Type', 'image/png');
+        res.setHeader('Content-Disposition', `attachment; filename="screenshot-${device}.png"`);
+        res.send(buffer);
     } catch (error) {
         console.error('Screenshot error:', error);
         res.status(500).json({ success: false, error: 'Failed to capture screenshot' });

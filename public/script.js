@@ -100,14 +100,18 @@ captureBtn.addEventListener('click', async () => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ url, device: currentDevice, fullPage: true })
         });
-        const data = await response.json();
         
-        if (data.success) {
-            downloadFile(data.url, `screenshot-${currentDevice}.png`);
-            showToast('Screenshot downloaded successfully!', 'success');
-        } else {
-            throw new Error(data.error);
+        if (!response.ok) {
+            const errResult = await response.json().catch(() => ({}));
+            throw new Error(errResult.error || 'Failed to capture screenshot');
         }
+
+        const blob = await response.blob();
+        const downloadUrl = URL.createObjectURL(blob);
+        
+        downloadFile(downloadUrl, `screenshot-${currentDevice}.png`);
+        URL.revokeObjectURL(downloadUrl);
+        showToast('Screenshot downloaded successfully!', 'success');
     } catch (err) {
         showToast('Error generating screenshot.', 'error');
         console.error(err);
@@ -131,14 +135,18 @@ pdfBtn.addEventListener('click', async () => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ url })
         });
-        const data = await response.json();
         
-        if (data.success) {
-            downloadFile(data.url, 'webpage.pdf');
-            showToast('PDF downloaded successfully!', 'success');
-        } else {
-            throw new Error(data.error);
+        if (!response.ok) {
+            const errResult = await response.json().catch(() => ({}));
+            throw new Error(errResult.error || 'Failed to generate PDF');
         }
+
+        const blob = await response.blob();
+        const downloadUrl = URL.createObjectURL(blob);
+        
+        downloadFile(downloadUrl, 'webpage.pdf');
+        URL.revokeObjectURL(downloadUrl);
+        showToast('PDF downloaded successfully!', 'success');
     } catch (err) {
         showToast('Error generating PDF.', 'error');
         console.error(err);
