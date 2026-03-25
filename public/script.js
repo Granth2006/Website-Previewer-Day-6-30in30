@@ -95,7 +95,7 @@ captureBtn.addEventListener('click', async () => {
 
     showModal('Generating Screenshot...');
     try {
-        const response = await fetch('/api/screenshot', {
+        const response = await fetch('/api/capture', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ url, device: currentDevice, fullPage: true })
@@ -130,7 +130,7 @@ pdfBtn.addEventListener('click', async () => {
 
     showModal('Generating Full Page PDF...');
     try {
-        const response = await fetch('/api/pdf', {
+        const response = await fetch('/api/document', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ url })
