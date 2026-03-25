@@ -36,9 +36,8 @@ export default async function handler(req, res) {
         const buffer = await page.screenshot({ fullPage: fullPage });
         await browser.close();
 
-        res.setHeader('Content-Type', 'image/png');
-        res.setHeader('Content-Disposition', `attachment; filename="screenshot-${device}.png"`);
-        res.send(buffer);
+        // Send base64 to avoid Vercel Serverless binary corruption
+        res.json({ success: true, base64: buffer.toString('base64') });
     } catch (error) {
         console.error('Screenshot error:', error);
         res.status(500).json({ success: false, error: 'Failed to capture screenshot' });

@@ -101,16 +101,20 @@ captureBtn.addEventListener('click', async () => {
             body: JSON.stringify({ url, device: currentDevice, fullPage: true })
         });
         
-        if (!response.ok) {
-            const errResult = await response.json().catch(() => ({}));
-            throw new Error(errResult.error || 'Failed to capture screenshot');
+        const data = await response.json();
+        if (!data.success) {
+            throw new Error(data.error || 'Failed to capture screenshot');
         }
 
-        const blob = await response.blob();
-        const downloadUrl = URL.createObjectURL(blob);
+        // Convert Base64 back to Blob cleanly
+        const base64Response = await fetch(`data:image/png;base64,${data.base64}`);
+        const blob = await base64Response.blob();
         
+        const downloadUrl = URL.createObjectURL(blob);
         downloadFile(downloadUrl, `screenshot-${currentDevice}.png`);
-        URL.revokeObjectURL(downloadUrl);
+        
+        // Timeout ensures download begins before revoking object URL
+        setTimeout(() => URL.revokeObjectURL(downloadUrl), 100);
         showToast('Screenshot downloaded successfully!', 'success');
     } catch (err) {
         showToast('Error generating screenshot.', 'error');
@@ -136,16 +140,20 @@ pdfBtn.addEventListener('click', async () => {
             body: JSON.stringify({ url })
         });
         
-        if (!response.ok) {
-            const errResult = await response.json().catch(() => ({}));
-            throw new Error(errResult.error || 'Failed to generate PDF');
+        const data = await response.json();
+        if (!data.success) {
+            throw new Error(data.error || 'Failed to generate PDF');
         }
 
-        const blob = await response.blob();
-        const downloadUrl = URL.createObjectURL(blob);
+        // Convert Base64 back to Blob cleanly
+        const base64Response = await fetch(`data:application/pdf;base64,${data.base64}`);
+        const blob = await base64Response.blob();
         
+        const downloadUrl = URL.createObjectURL(blob);
         downloadFile(downloadUrl, 'webpage.pdf');
-        URL.revokeObjectURL(downloadUrl);
+        
+        // Timeout ensures download begins before revoking object URL
+        setTimeout(() => URL.revokeObjectURL(downloadUrl), 100);
         showToast('PDF downloaded successfully!', 'success');
     } catch (err) {
         showToast('Error generating PDF.', 'error');
